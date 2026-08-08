@@ -1,0 +1,57 @@
+.daschboard {
+  display: flex;
+  background: #f5f7fb;
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+.right-side {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* ================= Left Side ================= */
+
+.left-sdie {
+  width: 250px;
+  background: #1e293b;
+  padding: 30px 0;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.left-sdie ul {
+  list-style: none;
+}
+
+.left-sdie li {
+  margin: 10px 15px;
+}
+
+.left-sdie a {
+  display: block;
+  text-decoration: none;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.left-sdie a:hover,
+.left-sdie li.active a {
+  background: #2563eb;
+}
+
+/* ================= Responsive ================= */
+
+@media (max-width: 768px) {
+  .daschboard {
+    flex-direction: column;
+  }
+
+  .left-sdie {
+    width: 100%;
+  }
+}
