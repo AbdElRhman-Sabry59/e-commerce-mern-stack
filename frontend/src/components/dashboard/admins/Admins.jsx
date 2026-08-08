@@ -21,7 +21,7 @@ export const Admins = () => {
   // =========================
   const fetchAdmins = async () => {
     try {
-      const res = await axios.get("http://localhost:8585/users", {
+      const res = await axios.get("https://e-commerce-mern-stack-production.up.railway.app/users", {
         withCredentials: true,
       });
 
@@ -56,7 +56,7 @@ export const Admins = () => {
       setLoading(true);
 
       const res = await axios.delete(
-        `http://localhost:8585/users/${admin.id}`,
+        `https://e-commerce-mern-stack-production.up.railway.app/users/${admin.id}`,
         {
           withCredentials: true,
         },
@@ -118,7 +118,7 @@ export const Admins = () => {
       setError("");
 
       await axios.put(
-        `http://localhost:8585/users/${selectedAdmin.id}`,
+        `https://e-commerce-mern-stack-production.up.railway.app/users/${selectedAdmin.id}`,
         {
           fullName,
           name,

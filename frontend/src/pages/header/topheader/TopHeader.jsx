@@ -24,7 +24,7 @@ const TopHeader = () => {
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8585/logout",
+        "https://e-commerce-mern-stack-production.up.railway.app/logout",
         {},
         {
           withCredentials: true,

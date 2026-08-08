@@ -5,7 +5,7 @@
 //   const [userDeleted, setUserDeleted] = useState([]);
 //   const handleDelete = async (user) => {
 //     try {
-//       const res = await axios.delete(`http://localhost:8585/users/${user.id}`);
+//       const res = await axios.delete(`https://e-commerce-mern-stack-production.up.railway.app/users/${user.id}`);
 
 //       alert(res.data.message);
 

@@ -33,7 +33,7 @@ export const Login = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8585/login",
+        "https://e-commerce-mern-stack-production.up.railway.app/login",
         {
           email,
           password,

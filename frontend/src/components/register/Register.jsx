@@ -38,13 +38,16 @@ function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:8585/signup", {
-        fullName,
-        name,
-        email,
-        password,
-        group_id,
-      });
+      const res = await axios.post(
+        "https://e-commerce-mern-stack-production.up.railway.app/signup",
+        {
+          fullName,
+          name,
+          email,
+          password,
+          group_id,
+        },
+      );
 
       console.log(res.data);
 

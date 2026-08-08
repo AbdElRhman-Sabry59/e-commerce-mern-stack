@@ -11,7 +11,7 @@ export default function Users() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:8585/users", {
+        const res = await axios.get("https://e-commerce-mern-stack-production.up.railway.app/users", {
           withCredentials: true,
         });
 
@@ -47,7 +47,7 @@ export default function Users() {
     }
 
     try {
-      const res = await axios.delete(`http://localhost:8585/users/${user.id}`, {
+      const res = await axios.delete(`https://e-commerce-mern-stack-production.up.railway.app/users/${user.id}`, {
         withCredentials: true,
       });
 
