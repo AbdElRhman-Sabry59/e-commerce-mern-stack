@@ -10,35 +10,65 @@ const app = express();
 
 const salt = 10;
 
-// =========================
+// ==================================================
 // JWT SECRET
-// =========================
+// ==================================================
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET) {
-  console.log("JWT_SECRET is missing from .env");
+  console.log("JWT_SECRET is missing");
   process.exit(1);
 }
 
-// =========================
-// MIDDLEWARE
-// =========================
+// ==================================================
+// TRUST PROXY
+// مهم مع Railway
+// ==================================================
+
+app.set("trust proxy", 1);
+
+// ==================================================
+// CORS
+// ==================================================
+
+const allowedOrigins = [
+  "http://localhost:5173",
+
+  // لو الـ Frontend منشور على Railway
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // السماح للطلبات بدون origin مثل Postman
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+
     credentials: true,
   }),
 );
+
+// ==================================================
+// MIDDLEWARE
+// ==================================================
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// =========================
+// ==================================================
 // DATABASE
-// =========================
+// ==================================================
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -47,6 +77,10 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT),
 });
+
+// ==================================================
+// DATABASE CONNECTION
+// ==================================================
 
 db.connect((err) => {
   if (err) {
@@ -57,14 +91,14 @@ db.connect((err) => {
   console.log("Connected To MySQL");
 });
 
-// =========================
+// ==================================================
 // SIGNUP
-// =========================
+// ==================================================
 
 app.post("/signup", (req, res) => {
   const { fullName, name, email, password } = req.body;
 
-  // أي حساب جديد = User عادي
+  // أي حساب جديد User عادي
   const group_id = 0;
 
   if (!fullName || !name || !email || !password) {
@@ -92,6 +126,8 @@ app.post("/signup", (req, res) => {
 
     bcrypt.hash(password.toString(), salt, (err, hash) => {
       if (err) {
+        console.log(err);
+
         return res.status(500).json({
           message: "Error hashing password",
         });
@@ -115,6 +151,7 @@ app.post("/signup", (req, res) => {
         return res.status(201).json({
           Status: "Success",
           message: "Account created successfully",
+
           user: {
             id: result.insertId,
             fullName,
@@ -128,26 +165,18 @@ app.post("/signup", (req, res) => {
   });
 });
 
-// =========================
+// ==================================================
 // LOGIN
-// =========================
+// ==================================================
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-
-  // =========================
-  // VALIDATION
-  // =========================
 
   if (!email || !password) {
     return res.status(400).json({
       message: "Email and password are required",
     });
   }
-
-  // =========================
-  // GET USER
-  // =========================
 
   const sql = "SELECT * FROM login WHERE email = ?";
 
@@ -160,7 +189,6 @@ app.post("/login", (req, res) => {
       });
     }
 
-    // Email not found
     if (data.length === 0) {
       return res.status(404).json({
         message: "Email does not exist",
@@ -168,10 +196,6 @@ app.post("/login", (req, res) => {
     }
 
     const user = data[0];
-
-    // =========================
-    // COMPARE PASSWORD
-    // =========================
 
     bcrypt.compare(password.toString(), user.password, (err, result) => {
       if (err) {
@@ -182,24 +206,20 @@ app.post("/login", (req, res) => {
         });
       }
 
-      // Wrong password
       if (!result) {
         return res.status(401).json({
           message: "Incorrect password",
         });
       }
 
-      // =========================
-      // CREATE JWT TOKEN
-      // =========================
+      // ==================================================
+      // CREATE JWT
+      // ==================================================
 
       const token = jwt.sign(
         {
           id: user.id,
           email: user.email,
-
-          // مهم جدًا
-          // نأخذ group_id من قاعدة البيانات
           group_id: Number(user.group_id),
         },
         JWT_SECRET,
@@ -208,20 +228,27 @@ app.post("/login", (req, res) => {
         },
       );
 
-      // =========================
-      // SAVE TOKEN IN COOKIE
-      // =========================
+      // ==================================================
+      // COOKIE
+      // ==================================================
+
+      const isProduction = process.env.NODE_ENV === "production";
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+
+        // في Production HTTPS
+        secure: isProduction,
+
+        // لو الـ Frontend والـ Backend على دومينات مختلفة
+        sameSite: isProduction ? "none" : "lax",
+
         maxAge: 24 * 60 * 60 * 1000,
       });
 
-      // =========================
+      // ==================================================
       // RESPONSE
-      // =========================
+      // ==================================================
 
       return res.status(200).json({
         Status: "Success",
@@ -239,26 +266,18 @@ app.post("/login", (req, res) => {
   });
 });
 
-// =========================
-// VERIFY TOKEN MIDDLEWARE
-// =========================
+// ==================================================
+// VERIFY TOKEN
+// ==================================================
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-
-  // =========================
-  // NO TOKEN
-  // =========================
 
   if (!token) {
     return res.status(401).json({
       message: "You are not authenticated",
     });
   }
-
-  // =========================
-  // VERIFY TOKEN
-  // =========================
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
@@ -267,19 +286,17 @@ const verifyToken = (req, res, next) => {
       });
     }
 
-    // Save user data
     req.user = decoded;
 
     next();
   });
 };
 
-// =========================
+// ==================================================
 // VERIFY ADMIN
-// =========================
+// ==================================================
 
 const verifyAdmin = (req, res, next) => {
-  // 1 = Admin
   if (Number(req.user.group_id) !== 1) {
     return res.status(403).json({
       message: "Access denied. Admins only.",
@@ -289,16 +306,16 @@ const verifyAdmin = (req, res, next) => {
   next();
 };
 
-// =========================
+// ==================================================
 // GET USERS
 // ADMIN ONLY
-// =========================
+// ==================================================
 
 app.get("/users", verifyToken, verifyAdmin, (req, res) => {
   const sql = `
-      SELECT id, fullName, name, email, group_id
-      FROM login
-    `;
+    SELECT id, fullName, name, email, group_id
+    FROM login
+  `;
 
   db.query(sql, (err, result) => {
     if (err) {
@@ -315,10 +332,10 @@ app.get("/users", verifyToken, verifyAdmin, (req, res) => {
   });
 });
 
-// =========================
+// ==================================================
 // DELETE USER
 // ADMIN ONLY
-// =========================
+// ==================================================
 
 app.delete("/users/:id", verifyToken, verifyAdmin, (req, res) => {
   const { id } = req.params;
@@ -345,10 +362,10 @@ app.delete("/users/:id", verifyToken, verifyAdmin, (req, res) => {
   });
 });
 
-// =========================
+// ==================================================
 // UPDATE USER
 // ADMIN ONLY
-// =========================
+// ==================================================
 
 app.put("/users/:id", verifyToken, verifyAdmin, (req, res) => {
   console.log("BODY:", req.body);
@@ -357,9 +374,9 @@ app.put("/users/:id", verifyToken, verifyAdmin, (req, res) => {
 
   const { fullName, name, email, group_id } = req.body;
 
-  // =========================
+  // ==================================================
   // VALIDATION
-  // =========================
+  // ==================================================
 
   if (!fullName || !name || !email) {
     return res.status(400).json({
@@ -367,7 +384,6 @@ app.put("/users/:id", verifyToken, verifyAdmin, (req, res) => {
     });
   }
 
-  // group_id لازم يكون 0 أو 1
   const newGroupId = Number(group_id);
 
   if (newGroupId !== 0 && newGroupId !== 1) {
@@ -376,15 +392,15 @@ app.put("/users/:id", verifyToken, verifyAdmin, (req, res) => {
     });
   }
 
-  // =========================
+  // ==================================================
   // CHECK EMAIL
-  // =========================
+  // ==================================================
 
   const checkEmail = `
-      SELECT *
-      FROM login
-      WHERE email = ? AND id != ?
-    `;
+    SELECT *
+    FROM login
+    WHERE email = ? AND id != ?
+  `;
 
   db.query(checkEmail, [email, id], (err, result) => {
     if (err) {
@@ -395,26 +411,25 @@ app.put("/users/:id", verifyToken, verifyAdmin, (req, res) => {
       });
     }
 
-    // Email already exists
     if (result.length > 0) {
       return res.status(400).json({
         message: "Email already exists",
       });
     }
 
-    // =========================
+    // ==================================================
     // UPDATE USER
-    // =========================
+    // ==================================================
 
     const sql = `
-          UPDATE login
-          SET
-            fullName = ?,
-            name = ?,
-            email = ?,
-            group_id = ?
-          WHERE id = ?
-        `;
+        UPDATE login
+        SET
+          fullName = ?,
+          name = ?,
+          email = ?,
+          group_id = ?
+        WHERE id = ?
+      `;
 
     db.query(sql, [fullName, name, email, newGroupId, id], (err, result) => {
       if (err) {
@@ -441,15 +456,17 @@ app.put("/users/:id", verifyToken, verifyAdmin, (req, res) => {
   });
 });
 
-// =========================
+// ==================================================
 // LOGOUT
-// =========================
+// ==================================================
 
 app.post("/logout", (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
 
   return res.status(200).json({
@@ -458,9 +475,9 @@ app.post("/logout", (req, res) => {
   });
 });
 
-// =========================
+// ==================================================
 // CHECK AUTH
-// =========================
+// ==================================================
 
 app.get("/check-auth", verifyToken, (req, res) => {
   return res.status(200).json({
@@ -474,10 +491,22 @@ app.get("/check-auth", verifyToken, (req, res) => {
   });
 });
 
-// =========================
+// ==================================================
+// ROOT
+// ==================================================
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend is running successfully",
+  });
+});
+
+// ==================================================
 // SERVER
-// =========================
+// ==================================================
+
 const PORT = process.env.PORT || 8585;
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server Running On Port ${PORT}`);
 });
