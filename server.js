@@ -295,7 +295,7 @@ const verifyAdmin = (req, res, next) => {
 
 app.get("/users", verifyToken, verifyAdmin, (req, res) => {
   const sql = `
-      SELECT id, fullName, name, email, password, group_id
+      SELECT id, fullName, name, email, group_id
       FROM login
     `;
 
