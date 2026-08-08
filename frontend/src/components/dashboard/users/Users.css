@@ -1,0 +1,97 @@
+.table-wrapper {
+  width: 100%;
+}
+
+.table-wrapper h2 {
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+table {
+  width: 100%;
+  margin: auto;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+thead {
+  background: #2563eb;
+  color: white;
+}
+
+thead th {
+  padding: 18px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+tbody td {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  transition: 0.3s;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+tbody tr:hover {
+  background: #eef4ff;
+}
+
+.operations {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.operations button {
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+/* Update */
+.operations button:nth-child(1) {
+  background: #3b82f6;
+}
+.operations button:nth-child(1):hover {
+  background: #2563eb;
+}
+
+/* Delete */
+.operations button:nth-child(2) {
+  background: #ef4444;
+}
+.operations button:nth-child(2):hover {
+  background: #dc2626;
+}
+
+/* Edit */
+.operations button:nth-child(3) {
+  background: #10b981;
+}
+.operations button:nth-child(3):hover {
+  background: #059669;
+}
+
+@media (max-width: 900px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 800px;
+  }
+}
