@@ -42,7 +42,6 @@ const TopHeader = () => {
       console.log(err);
     }
   };
-  console.log(logo);
   return (
     <div className="header">
       <div className="container">
@@ -96,7 +95,12 @@ const TopHeader = () => {
                   flexWrap: "wrap",
                 }}
               >
-                <div className="welcome">
+                <div
+                  className="welcome"
+                  style={{
+                    zIndex: "99",
+                  }}
+                >
                   {groupId === "1" ? (
                     <div
                       style={{
@@ -106,7 +110,14 @@ const TopHeader = () => {
                         alignItems: "center",
                       }}
                     >
-                      <h3>Admin: {fullName}</h3>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "5px",
+                        }}
+                      >
+                        <p>Admin:</p> <p>{fullName}</p>
+                      </div>
                       <a
                         href="/dashboard"
                         style={{
@@ -115,9 +126,9 @@ const TopHeader = () => {
                           color:
                             pathLocation === "/dashboard" ? "snow" : "#000",
                           padding:
-                            pathLocation === "/dashboard" ? "10px" : "10px",
+                            pathLocation === "/dashboard" ? "5px" : "5px",
                           borderRadius:
-                            pathLocation === "/dashboard" ? "10px" : "10px",
+                            pathLocation === "/dashboard" ? "5px" : "5px",
                         }}
                       >
                         Dashboard
@@ -127,9 +138,6 @@ const TopHeader = () => {
                     `User: ${fullName.toUpperCase()}`
                   )}
                 </div>
-
-                {/* LOGOUT */}
-
                 <li className="active" onClick={handleLogout}>
                   <button
                     type="button"
