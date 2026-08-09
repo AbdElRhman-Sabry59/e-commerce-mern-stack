@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-// const API_URL = "https://e-commerce-mern-stack-production.up.railway.app";
-const API_URL = import.meta.env.VITE_API_URL;
+
+const API_URL = "https://e-commerce-mern-stack-production.up.railway.app";
+// const API_URL = import.meta.env.VITE_API_URL;
 export const Admins = () => {
   const [users, setUsers] = useState([]);
-
   // المستخدم الذي يتم تعديله
   const [selectedAdmin, setSelectedAdmin] = useState(null);
 
@@ -22,14 +22,13 @@ export const Admins = () => {
   // =========================
   const fetchAdmins = async () => {
     try {
-      const res = await axios.get(
-        `https://e-commerce-mern-stack-production.up.railway.app/users`,
-        {
-          withCredentials: true,
-        },
-      );
-
+      const res = await axios.get(`${API_URL}/users`, {
+        withCredentials: true,
+      });
       setUsers(res.data.users);
+      console.log(res.data.users);
+
+      setError("");
     } catch (err) {
       console.log(err);
 
@@ -43,7 +42,7 @@ export const Admins = () => {
   useEffect(() => {
     fetchAdmins();
   }, []);
-
+  // console.log(selectedAdmin[1].group_id);
   // =========================
   // DELETE ADMIN
   // =========================
@@ -59,18 +58,16 @@ export const Admins = () => {
     try {
       setLoading(true);
 
-      const res = await axios.delete(
-        `https://e-commerce-mern-stack-production.up.railway.app/users/${admin.id}`,
-        {
-          withCredentials: true,
-        },
-      );
+      const res = await axios.delete(`${API_URL}/users/${admin.id}`, {
+        withCredentials: true,
+      });
 
       console.log(res.data);
 
       // حذف المستخدم من الواجهة
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== admin.id));
 
+      // لو المستخدم المحذوف هو المستخدم الذي يتم تعديله
       if (selectedAdmin?.id === admin.id) {
         setSelectedAdmin(null);
       }
@@ -92,7 +89,7 @@ export const Admins = () => {
   // OPEN EDIT
   // =========================
   const handleEdit = (admin) => {
-    console.log(admin); // اطبع بيانات الأدمن
+    console.log(admin);
 
     setSelectedAdmin(admin);
 
@@ -104,13 +101,16 @@ export const Admins = () => {
 
     setError("");
   };
+
   // =========================
   // UPDATE ADMIN
   // =========================
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    if (!selectedAdmin) return;
+    if (!selectedAdmin) {
+      return;
+    }
 
     if (!fullName.trim() || !name.trim() || !email.trim()) {
       setError("Please fill all fields");
@@ -122,7 +122,7 @@ export const Admins = () => {
       setError("");
 
       await axios.put(
-        `https://e-commerce-mern-stack-production.up.railway.app/users/${selectedAdmin.id}`,
+        `${API_URL}/users/${selectedAdmin.id}`,
         {
           fullName,
           name,
@@ -152,13 +152,14 @@ export const Admins = () => {
       setLoading(false);
     }
   };
+
   // =========================
   // ADMINS ONLY
   // =========================
   const admins = users.filter((user) => Number(user.group_id) === 1);
 
   return (
-    <div className="admins-page">
+    <div>
       {/* ========================= */}
       {/* ADMINS TABLE */}
       {/* ========================= */}
@@ -261,7 +262,6 @@ export const Admins = () => {
               onChange={(e) => setGroup_id(Number(e.target.value))}
             >
               <option value={0}>User</option>
-
               <option value={1}>Admin</option>
             </select>
 
@@ -271,7 +271,13 @@ export const Admins = () => {
                 {loading ? "Updating..." : "Update"}
               </button>
 
-              <button type="button" onClick={() => setSelectedAdmin(null)}>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedAdmin(null);
+                  setError("");
+                }}
+              >
                 Cancel
               </button>
             </div>
