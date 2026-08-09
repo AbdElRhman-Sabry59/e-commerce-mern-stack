@@ -33,16 +33,13 @@ app.set("trust proxy", 1);
 // ==================================================
 
 const allowedOrigins = [
+  "http://localhost:5173",
   "https://steadfast-caring-production-a1e9.up.railway.app",
-
-  // لو الـ Frontend منشور على Railway
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // السماح للطلبات بدون origin مثل Postman
       if (!origin) {
         return callback(null, true);
       }
@@ -53,7 +50,6 @@ app.use(
 
       return callback(new Error("Not allowed by CORS"));
     },
-
     credentials: true,
   }),
 );
