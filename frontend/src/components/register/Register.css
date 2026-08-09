@@ -1,0 +1,121 @@
+.register {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f8f4ea, #efe7d7);
+}
+
+.register .container {
+  width: 100%;
+  max-width: 470px;
+}
+
+.form-register {
+  background: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  border: 2px solid #caa35d;
+}
+
+.form-register h2 {
+  text-align: center;
+  font-size: 34px;
+  color: #3b2f20;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.form-register h2::after {
+  content: "";
+  width: 70px;
+  height: 3px;
+  background: #caa35d;
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+}
+
+.form-register form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-register label {
+  margin: 12px 0 6px;
+  color: #5c4725;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.form-register input {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #d7c6a5;
+  border-radius: 8px;
+  background: #faf8f2;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.form-register input:focus {
+  border-color: #caa35d;
+  background: white;
+  box-shadow: 0 0 8px rgba(202, 163, 93, 0.3);
+}
+
+.form-register button {
+  margin-top: 28px;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #2f2517;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-register button:hover {
+  background: #caa35d;
+  color: #2f2517;
+}
+
+.form-register p {
+  text-align: center;
+  margin-top: 20px;
+  color: #555;
+}
+
+.form-register a {
+  color: #b8860b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.form-register a:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: crimson;
+  font-size: 14px;
+  margin-top: 6px;
+  min-height: 18px;
+}
+
+@media (max-width: 500px) {
+  .form-register {
+    padding: 25px;
+  }
+
+  .form-register h2 {
+    font-size: 28px;
+  }
+}

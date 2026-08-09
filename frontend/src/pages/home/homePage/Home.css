@@ -1,0 +1,96 @@
+.hero-section {
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* Products Section */
+
+.products {
+  width: 95%;
+  max-width: 1450px;
+  margin: 50px auto;
+}
+
+/* Category */
+
+.category-products {
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
+/* Category Box */
+
+.category-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transition: 0.35s;
+}
+
+.category-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* Heading */
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 15px;
+}
+
+.category-header h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #222;
+  text-transform: capitalize;
+  position: relative;
+}
+
+.category-header h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -17px;
+  width: 70px;
+  height: 4px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #0d6efd, #6ea8fe);
+}
+
+.category-header a {
+  text-decoration: none;
+  color: #0d6efd;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.category-header a:hover {
+  letter-spacing: 1px;
+}
+
+/* Products Grid */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+/* Loading */
+
+.loading {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #0d6efd;
+}
