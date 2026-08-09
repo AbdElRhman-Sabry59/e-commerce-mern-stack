@@ -26,7 +26,6 @@ export const Admins = () => {
         withCredentials: true,
       });
       setUsers(res.data.users);
-      console.log(res.data.users);
 
       setError("");
     } catch (err) {
@@ -42,7 +41,6 @@ export const Admins = () => {
   useEffect(() => {
     fetchAdmins();
   }, []);
-  // console.log(selectedAdmin[1].group_id);
   // =========================
   // DELETE ADMIN
   // =========================
@@ -62,7 +60,6 @@ export const Admins = () => {
         withCredentials: true,
       });
 
-      console.log(res.data);
 
       // حذف المستخدم من الواجهة
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== admin.id));
