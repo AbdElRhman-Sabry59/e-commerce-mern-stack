@@ -34,10 +34,7 @@ app.set("trust proxy", 1);
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://steadfast-caring-production-a1e9.up.railway.app",
-    ],
+    origin: ["https://steadfast-caring-production-a1e9.up.railway.app"],
     credentials: true,
   }),
 );
