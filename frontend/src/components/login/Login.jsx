@@ -33,7 +33,7 @@ export const Login = () => {
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/login`,
+        "https://e-commerce-mern-stack-production.up.railway.app/login",
         {
           email,
           password,

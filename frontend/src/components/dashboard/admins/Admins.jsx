@@ -23,7 +23,7 @@ export const Admins = () => {
   const fetchAdmins = async () => {
     try {
       const res = await axios.get(
-        "https://e-commerce-mern-stack-production.up.railway.app/users",
+        `https://e-commerce-mern-stack-production.up.railway.app/users`,
         {
           withCredentials: true,
         },
