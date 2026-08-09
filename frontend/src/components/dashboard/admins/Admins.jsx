@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+// const API_URL = "https://e-commerce-mern-stack-production.up.railway.app";
+const API_URL = import.meta.env.VITE_API_URL;
 export const Admins = () => {
   const [users, setUsers] = useState([]);
 
@@ -21,9 +22,12 @@ export const Admins = () => {
   // =========================
   const fetchAdmins = async () => {
     try {
-      const res = await axios.get("https://e-commerce-mern-stack-production.up.railway.app/users", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        "https://e-commerce-mern-stack-production.up.railway.app/users",
+        {
+          withCredentials: true,
+        },
+      );
 
       setUsers(res.data.users);
     } catch (err) {
