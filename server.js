@@ -32,12 +32,32 @@ app.set("trust proxy", 1);
 // CORS
 // ==================================================
 
+const allowedOrigins = [
+  "https://steadfast-caring-production-a1e9.up.railway.app",
+
+  // لو الـ Frontend منشور على Railway
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: ["https://steadfast-caring-production-a1e9.up.railway.app"],
+    origin: function (origin, callback) {
+      // السماح للطلبات بدون origin مثل Postman
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+
     credentials: true,
   }),
 );
+
 // ==================================================
 // MIDDLEWARE
 // ==================================================
