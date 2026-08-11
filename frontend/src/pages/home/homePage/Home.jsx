@@ -31,8 +31,8 @@ function Home() {
         <div className="home-section">
           {localStorage.getItem("email") ? (
             <div className="hero-section">
-              <SearchItems />
               <Hero />
+              <SearchItems />
               <div className="products">
                 <div className="category-products">
                   {category.map((cat) => (

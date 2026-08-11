@@ -68,7 +68,7 @@ const TopHeader = () => {
                   onClick={() => {
                     setPath("/");
                   }}
-                  className={path === "/" ? "active" : ""}
+                  className={pathLocation === "/" ? "active" : ""}
                 >
                   <Link to="/">Login</Link>
                 </li>

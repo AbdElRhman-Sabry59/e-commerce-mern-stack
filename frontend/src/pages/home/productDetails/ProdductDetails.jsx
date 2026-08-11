@@ -107,7 +107,15 @@ const ProdductDetails = () => {
               <h2>{singleProduct.category.replace("-", " ").toUpperCase()}</h2>
               <p className="desc">{singleProduct.description}</p>
             </div>
-            <div className="products-draw">
+            <div
+              className="products-draw"
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
               {products
                 .filter(
                   (product) => product.category === singleProduct.category,
